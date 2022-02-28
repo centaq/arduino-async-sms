@@ -19,11 +19,3 @@ fillState	KEYWORD2
 smsReceived	KEYWORD2
 logger	KEYWORD2
 
-#######################################
-# Constants (LITERAL1)
-#######################################
-
-TEMP_ERROR	LITERAL1
-FA	LITERAL1
-E	LITERAL1
-TE	LITERAL1
