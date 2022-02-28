@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map AsyncSMS
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+AsyncSMS	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+init	KEYWORD2
+send	KEYWORD2
+process	KEYWORD2
+deleteAllSMS	KEYWORD2
+fillState	KEYWORD2
+smsReceived	KEYWORD2
+logger	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+TEMP_ERROR	LITERAL1
+FA	LITERAL1
+E	LITERAL1
+TE	LITERAL1
