@@ -30,7 +30,7 @@ void AsyncSMS::reinitGSMModuleConnection() {
 	enqueue("AT+CREG=1");
 	enqueue("ATE0");
 	if (_autoStateRefresh) {
-		_stateRefreshTimer.begin(5000);
+		_stateRefreshTimer.start(5000);
 	}
 	_registrationErrorsCount = 0;
 }
@@ -58,7 +58,7 @@ void AsyncSMS::process() {
 	if (!_receiving && !_waitingForResponse) {
 		if (queueAvailable()) {
 			_waitingForResponse = true;
-			_waitingForResponseTimer.begin(15000);
+			_waitingForResponseTimer.start(15000);
 			
 			String cmd = dequeue();
 			
@@ -78,7 +78,7 @@ void AsyncSMS::process() {
 
 	while(_gsm->available()) {
 		if (!_receiving) {
-			_receivingMessageTimer.begin(100);
+			_receivingMessageTimer.start(100);
 			_receivedMessageIndex = 0;
 			_receiving = true;
 		} else {

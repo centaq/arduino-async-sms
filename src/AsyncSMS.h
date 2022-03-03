@@ -61,9 +61,9 @@ private:
 	SMSSendingStageEnum _sendingStage = SMSSendingStageEnum::Idle;
 	uint8_t _smsSendRetry = 0;
   
-    Timer _receivingMessageTimer;
-    Timer _waitingForResponseTimer;
-	Timer _stateRefreshTimer;
+    Timers _receivingMessageTimer;
+    Timers _waitingForResponseTimer;
+    Timers _stateRefreshTimer;
 	
 	bool _waitingForResponse;
 	bool _receiving;
