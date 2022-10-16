@@ -50,12 +50,35 @@ Of cource `process` function in main loop has to be placed there as it is respon
 As above, including `process` function in main loop is essential, as this is a asynchronous library.
 As you can also see, you have to specify message length while sending sms.
 
+
+### Sending message using SoftwareSerial
+
+    #include "AsyncSMS.h"
+    #include <SoftwareSerial.h>
+
+    #define RX 1
+    #define TX 2
+
+    SoftwareSerial SerialGSM(RX, TX);
+    AsyncSMS smsHelper(&SerialGSM);
+    void setup() {
+      SerialGSM.begin(57600);
+      smsHelper.init();
+      smsHelper.send("+48123456789", "This is my Arduino driven SMS module working", 45);
+    }
+
+    void loop() {
+      smsHelper.process();
+    }
+Above example shows how SoftwareSerial can be use with asynchronous sms library.
+The major difference is with the fact that software serial is initialize outside library native code.
+
 ### Full example
 
     #include "AsyncSMS.h"
     
     AsyncSMS smsHelper(&Serial3, 57600);
-	bool sendSingleSMS;
+    bool sendSingleSMS;
     
     void messageReceived(char * number, char * message) {
       //Do something with your message
@@ -72,14 +95,14 @@ As you can also see, you have to specify message length while sending sms.
       smsHelper.init();
       smsHelper.smsReceived = *messageReceived;
       smsHelper.logger = *processingLogger;
-	  sendSingleSMS = true;
+      sendSingleSMS = true;
     }
     
     void loop() {
       smsHelper.process();
       if (sendSingleSMS) { 
         smsHelper.send("+48123456789", "This is my Arduino driven SMS module working", 45);
-		sendSingleSMS = false;
+        sendSingleSMS = false;
       }
     }
 

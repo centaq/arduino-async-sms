@@ -5,6 +5,7 @@
 #include <inttypes.h>
 #include <Timers.h>
 #include <HardwareSerial.h>
+#include <SoftwareSerial.h>
 
 #define SMS_SEND_MSG_LEN 160
 #define SMS_SEND_QUEUE_LENGTH 4
@@ -48,7 +49,9 @@ private:
 		char message[SMS_SEND_MSG_LEN];
 	};
 	
-	HardwareSerial *_gsm;
+	Stream *_gsm;
+	HardwareSerial *_hardwareSerial;
+	bool _withSerialInit;
 	uint32_t _baudRate;
 	bool _autoStateRefresh;
   
@@ -102,9 +105,18 @@ private:
 	
 	void log(char *msg);
 	void log(String msg);
+	
+	AsyncSMS(Stream *gsm, uint32_t baudRate, bool autoStateRefresh, bool withSerialInit);
 public:
+	AsyncSMS(SoftwareSerial *gsm) : AsyncSMS(gsm, 0, false, false) { }
+	AsyncSMS(SoftwareSerial *gsm, bool autoStateRefresh) : AsyncSMS(gsm, 0, autoStateRefresh, false) { }
+
+	AsyncSMS(HardwareSerial *gsm) : AsyncSMS(gsm, false) { }
+	AsyncSMS(HardwareSerial *gsm, bool autoStateRefresh) : AsyncSMS(gsm, 0, autoStateRefresh) { }
 	AsyncSMS(HardwareSerial *gsm, uint32_t baudRate) : AsyncSMS(gsm, baudRate, false) { }
-	AsyncSMS(HardwareSerial *gsm, uint32_t baudRate, bool autoStateRefresh);
+	AsyncSMS(HardwareSerial *gsm, uint32_t baudRate, bool autoStateRefresh) : AsyncSMS(gsm, baudRate, autoStateRefresh, true) {
+		_hardwareSerial = gsm;
+	}
 	
 	void init();
 	void send(String number, char *message, uint8_t len);

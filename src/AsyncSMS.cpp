@@ -1,13 +1,16 @@
 #include "AsyncSMS.h"
 
-AsyncSMS::AsyncSMS(HardwareSerial *gsm, uint32_t baudRate, bool autoStateRefresh) {
+AsyncSMS::AsyncSMS(Stream *gsm, uint32_t baudRate, bool autoStateRefresh, bool withSerialInit) {
 	_gsm = gsm;
 	_baudRate = baudRate;
 	_autoStateRefresh = autoStateRefresh;
+	_withSerialInit = withSerialInit;
 }
 
 void AsyncSMS::init() {
-	_gsm->begin(_baudRate);
+	if (_withSerialInit && _hardwareSerial != NULL) {
+		_hardwareSerial->begin(_baudRate);
+	}
 	while(!_gsm) {}
 	
 	reinitGSMModuleConnection();
