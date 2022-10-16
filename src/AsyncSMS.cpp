@@ -219,7 +219,7 @@ void AsyncSMS::checkRegistrationState(uint8_t registrationEnabledState, uint8_t 
 }
 
 void AsyncSMS::deleteAllSMS() {
-	_gsm->write("AT+CMGDA=DEL ALL\r\n");
+	enqueue("AT+CMGDA=DEL ALL");
 }
 
 bool AsyncSMS::isNewSMS() {
