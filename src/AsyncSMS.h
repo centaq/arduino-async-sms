@@ -112,7 +112,6 @@ public:
 	AsyncSMS(SoftwareSerial *gsm, bool autoStateRefresh) : AsyncSMS(gsm, 0, autoStateRefresh, false) { }
 
 	AsyncSMS(HardwareSerial *gsm) : AsyncSMS(gsm, false) { }
-	AsyncSMS(HardwareSerial *gsm, bool autoStateRefresh) : AsyncSMS(gsm, 0, autoStateRefresh) { }
 	AsyncSMS(HardwareSerial *gsm, uint32_t baudRate) : AsyncSMS(gsm, baudRate, false) { }
 	AsyncSMS(HardwareSerial *gsm, uint32_t baudRate, bool autoStateRefresh) : AsyncSMS(gsm, baudRate, autoStateRefresh, true) {
 		_hardwareSerial = gsm;
