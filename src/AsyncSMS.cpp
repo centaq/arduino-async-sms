@@ -38,7 +38,7 @@ void AsyncSMS::reinitGSMModuleConnection() {
 	_registrationErrorsCount = 0;
 }
 
-void AsyncSMS::send(String number, char *message, uint8_t len) {
+void AsyncSMS::send(String number, const char *message, uint8_t len) {
 	enqueueWithoutNewLine("SMS");
 		
 	uint8_t maxLen = len;
@@ -370,9 +370,11 @@ void AsyncSMS::parseSMS() {
 	}
 	if (smsReceived)
 		smsReceived(senderNumber, message);
+	if (smsReceivedWithDate)
+		smsReceivedWithDate(senderNumber, message, dt);
 }
 
-void AsyncSMS::log(char *msg) {
+void AsyncSMS::log(const char *msg) {
 	if (logger)
 		logger(msg);
 }
@@ -395,4 +397,5 @@ uint16_t AsyncSMS::findLineBreak(char *msg, uint16_t len) {
 			return i + 2;
 		}
 	}
+	return 0;
 }

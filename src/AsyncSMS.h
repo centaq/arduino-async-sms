@@ -103,7 +103,7 @@ private:
 	
 	uint16_t findLineBreak(char *_msg, uint16_t len);
 	
-	void log(char *msg);
+	void log(const char *msg);
 	void log(String msg);
 	
 	AsyncSMS(Stream *gsm, uint32_t baudRate, bool autoStateRefresh, bool withSerialInit);
@@ -118,13 +118,14 @@ public:
 	}
 	
 	void init();
-	void send(String number, char *message, uint8_t len);
+	void send(String number, const char *message, uint8_t len);
 	void process();
 	void deleteAllSMS();
 	uint8_t fillState(uint8_t index, uint8_t* state);
 	
 	void (*smsReceived)(char * number, char * message);
-	void (*logger)(char *msg);
+	void (*smsReceivedWithDate)(char * number, char * message, char * dt);
+	void (*logger)(const char *msg);
 };
 
 #endif
