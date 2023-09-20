@@ -72,7 +72,7 @@ void AsyncSMS::process() {
 			#endif
 			if (cmd == "SMS") {
 				_sendingStage = SMSSendingStageEnum::Starting;
-				_gsm->write("AT+CMGF=1\n");
+				_gsm->write("AT+CMGF=1\r");
 			} else {
 				_gsm->write(cmd.c_str());
 			}
@@ -154,7 +154,6 @@ void AsyncSMS::processSMSSending() {
 			_gsm->write("AT+CMGS=\"");
 			_gsm->write(_smsSendQueue[_smsSendQueueBeginIndex].number);
 			_gsm->write("\"\r");
-			_gsm->write(_smsSendQueue[_smsSendQueueBeginIndex].message);
 		} else {
 			retrySMSSend();
 		}
@@ -162,8 +161,9 @@ void AsyncSMS::processSMSSending() {
 		if (success) {
 			_waitingForResponse = true;
 			_sendingStage = SMSSendingStageEnum::Finishing;
+			_gsm->write(_smsSendQueue[_smsSendQueueBeginIndex].message);
 			_gsm->write((char)26);
-			_gsm->write('\n');
+			_gsm->write((char)'\r');
 		} else {
 			retrySMSSend();
 		}
@@ -292,7 +292,7 @@ uint8_t AsyncSMS::parseResultValues(String res) {
 }
 
 void AsyncSMS::enqueue(String cmd) {
-	enqueueWithoutNewLine(cmd + "\n");
+	enqueueWithoutNewLine(cmd + "\r");
 }
 
 void AsyncSMS::enqueueWithoutNewLine(String cmd) {
@@ -395,6 +395,11 @@ uint16_t AsyncSMS::findLineBreak(char *msg, uint16_t len) {
 	for (uint16_t i = 0; i < len - 1; i++) {
 		if (msg[i] == 13 && msg[i + 1] == 10) {
 			return i + 2;
+		}
+		if (_sendingStage == SMSSendingStageEnum::SendingText){
+			if (msg[i] == 62 && msg[i + 1] == 32) { //3E 20 (>)
+				return i + 2;
+			}
 		}
 	}
 	return 0;
