@@ -10,6 +10,7 @@
 #define SMS_SEND_MSG_LEN 160
 #define SMS_SEND_QUEUE_LENGTH 4
 #define SMS_RETRY_COUNT 2
+#define FAILED_CMD_RETRY_COUNT 2
 #define GSM_CMD_QUEUE_LEN 16
 
 #define PHONE_NUMBER_LEN 13
@@ -21,6 +22,7 @@
 
 #define REGISTRATION_ERROR_CHECKS 5
 
+#define POWER_KEY_PIN 2
 //#define ASYNC_SMS_DEBUG_MODE
 
 class AsyncSMS
@@ -43,6 +45,11 @@ private:
 		SendingText,
 		Finishing
 	};
+	enum class PowerModuleEnum {
+		Ready,
+		KeyHolding,
+		StartingUp
+	};
 	
 	struct SmsQueueItem {
 		char number[PHONE_NUMBER_LEN];
@@ -63,11 +70,14 @@ private:
 	uint8_t _smsSendQueueEndIndex = 0;
 	SMSSendingStageEnum _sendingStage = SMSSendingStageEnum::Idle;
 	uint8_t _smsSendRetry = 0;
+	uint8_t _failedCmdRetry = 0;
   
     Timers _receivingMessageTimer;
     Timers _waitingForResponseTimer;
     Timers _stateRefreshTimer;
+    Timers _modulePowerTimer;
 	
+	PowerModuleEnum _powerStage = PowerModuleEnum::Ready;
 	bool _waitingForResponse;
 	bool _receiving;
 	String _cmdQueue[GSM_CMD_QUEUE_LEN];
@@ -85,6 +95,7 @@ private:
 	void enqueueWithoutNewLine(String cmd);
 	String dequeue();
 	bool queueAvailable();
+	void enqueueMissed();
 	
 	bool checkFunctionResult(String toCheck);
 	bool isNewSMS();
